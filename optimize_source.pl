@@ -14,8 +14,9 @@ use File::Find;
 use File::Path;
 use Log::Log4perl;
 use Getopt::Long;
+use Config::Properties;
 
-
+my $confProps = Config::Properties->new();
 
 my $VERSION = "1.23";
 my $script = File::Basename::basename($0);
@@ -182,6 +183,16 @@ if($config->{MERGE_FILES}) {
 stop();
 
 ######## SUBS ########
+
+sub initConfig
+{
+    my $props = Config::Properties->new();
+    my $handle;
+    open($handle, "<", \$string);
+    $props->load($handle);
+    $config = \($confProps->properties());
+    close($handle);    
+}
 
 sub interrupt {
     $logger->info("Process interrupted by ^C from terminal.");
